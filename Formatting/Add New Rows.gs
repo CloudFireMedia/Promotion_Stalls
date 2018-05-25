@@ -4,4 +4,3 @@ function addNewRow_() {
   sh.insertRowBefore(55);
   sh.getRange("A55").setFormula('=A54+7'); 
 }
-
