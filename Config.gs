@@ -47,7 +47,7 @@ var TEST_SEND_STAFF_EMAIL_ = true;
 
 var TEST_SEND_SMS_ = true;
 
-var TEST_USE_LIVE_STAFF_DATA = false;
+var TEST_USE_LIVE_STAFF_DATA = true;
 
 if (PRODUCTION_VERSION_ && 
     (!TEST_SEND_COC_EMAIL_ ||
