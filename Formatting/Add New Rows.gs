@@ -1,4 +1,4 @@
-function addNewRow() {
+function addNewRow_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ss.getSheetByName("Foyer + Atrium Promo Stalls");
   sh.insertRowBefore(55);

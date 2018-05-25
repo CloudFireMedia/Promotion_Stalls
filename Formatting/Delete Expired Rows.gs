@@ -1,4 +1,4 @@
-function deleteExpiredRows() {
+function deleteExpiredRows_() {
   
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = ss.getSheetByName("Foyer + Atrium Promo Stalls");
@@ -12,7 +12,7 @@ function deleteExpiredRows() {
   
   for (var i = lastrow; i >= 4; i--) {
   
-    var tempdate = values[i-1][0];// arrays are 0 indexed so row1 = values[0] and col3 = [2]
+    var tempdate = values[i-1][0]; // arrays are 0 indexed so row1 = values[0] and col3 = [2]
     
     if(tempdate < today)  {
       sheet.deleteRows(i);

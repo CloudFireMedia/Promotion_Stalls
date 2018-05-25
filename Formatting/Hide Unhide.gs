@@ -1,12 +1,4 @@
-function onOpen() {
-    var ui = SpreadsheetApp.getUi()
-        .createMenu('[ Hide/Unhide Columns ]')
-        .addItem('Hide Empty Columns', 'hideEmptyColumns')
-        .addItem('unHide Empty Columns', 'unHideAllColumns')
-        .addToUi();
-}
-
-function hideEmptyColumns() {
+function hideEmptyColumns_() {
 
     var ss = SpreadsheetApp.getActive(),
         sheet = ss.getSheetByName('Foyer + Atrium Promo Stalls'),
@@ -38,7 +30,7 @@ function hideEmptyColumns() {
     }
 }
 
-function unHideAllColumns() {
+function unHideAllColumns_() {
   var sheet = SpreadsheetApp.getActiveSheet();
   var fullSheetRange = sheet.getRange(1,1,sheet.getMaxRows(), sheet.getMaxColumns() )  
   sheet.unhideColumn( fullSheetRange ); 

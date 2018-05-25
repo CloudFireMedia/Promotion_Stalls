@@ -1,32 +1,5 @@
-// var CNN_STAFF_SHEET_ID = "1iiFmdqUd-CoWtUjZxVgGcNb74dPVh-l5kuU_G5mmiHI"; // live
-var CNN_STAFF_SHEET_ID = "1Ard4lE_DgXw7O8ijp4KPkFZ8-Csq1rmSSowIJTJKU5g"; // AJR Copy of CCN Staff Data Sheet (chcs.dev)
-
-var TEST_SEND_COC_EMAIL = true;
-var TEST_SEND_STAFF_EMAIL = false;
-
-var TEST_SEND_SMS = false;
-
-var SMS_SENT_FROM = "(615) 398-6380";
-
-/*
-function onOpen() {
-
-	var ui = SpreadsheetApp.getUi();
-
-	ui.createMenu('Utilities')
-	.addItem('Initialize triggers', 'bol8')
-	.addItem('Stop triggers', 'bol9')
-	.addToUi();
-}
-*/
-
-function saturday() {
-  sendReminder_(true, false);
-}
-
-function sunday() {
-  sendReminder_(false, true);
-}
+function saturday_() {sendReminder_(true, false)}
+function sunday_() {sendReminder_(false, true)}
 
 function sendReminder_(emailFlag, smsFlag) {
 
@@ -42,7 +15,7 @@ function sendReminder_(emailFlag, smsFlag) {
   var regE = new RegExp('(.*)\n(.*)\n(.*)', 'ig');
 
   var allStaff = SpreadsheetApp
-    .openById(CNN_STAFF_SHEET_ID)
+    .openById(CNN_STAFF_SHEET_ID_)
     .getSheetByName('Staff')
     .getDataRange()
     .getValues();
@@ -155,8 +128,11 @@ function sendReminder_(emailFlag, smsFlag) {
           htmlBody: bodyS
         }
         
-        if (TEST_SEND_COC_EMAIL) {
-          MailApp.sendEmail(objE);  
+        if (TEST_SEND_COC_EMAIL_) {
+          MailApp.sendEmail(objE);
+          Log_.info('Sent reminder to ' + objE.to);
+        } else {
+          Log_.warning('COC Email disabled (not sent to ' + objE.to + ')');
         }
       }
     }
@@ -305,8 +281,11 @@ function sendReminder_(emailFlag, smsFlag) {
           objE.cc = tEmail;
         }
 
-        if (TEST_SEND_STAFF_EMAIL) {
+        if (TEST_SEND_STAFF_EMAIL_) {
           MailApp.sendEmail(objE);
+          Log_.info('Sent reminder to ' + objE.to);
+        } else {
+          Log_.warning('Staff Email disabled (not sent to ' + objE.to + ')');
         }
       }
       
@@ -390,8 +369,8 @@ function sendReminder_(emailFlag, smsFlag) {
 
     function sendSms(to, body) {
     
-      if (!TEST_SEND_SMS) {
-        Logger.log('To: ' + to + ', body: ' + body);
+      if (!TEST_SEND_SMS_) {
+        Log_.warning('SMS Send disabled. not sent to: ' + to + ', body: ' + body);
         return;
       }
     
@@ -400,7 +379,7 @@ function sendReminder_(emailFlag, smsFlag) {
       var payload = {
         "To": to,
         "Body": body,
-        "From": SMS_SENT_FROM,
+        "From": SMS_SENT_FROM_,
       };
       
       var options = {
@@ -413,6 +392,7 @@ function sendReminder_(emailFlag, smsFlag) {
       };
       
       UrlFetchApp.fetch(messages_url, options);
+      Log_.info('SMS sent to: ' + to + ', body: ' + body);
         
     } // sendReminder_.sendMailToStaff.sendSms()
     
@@ -422,7 +402,7 @@ function sendReminder_(emailFlag, smsFlag) {
   
     var staffFromSheet = [];
     
-    var sp = SpreadsheetApp.openById(CNN_STAFF_SHEET_ID);
+    var sp = SpreadsheetApp.openById(CNN_STAFF_SHEET_ID_);
     var sh = sp.getSheetByName('Staff');
     var data = sh.getDataRange().getValues();
     
@@ -542,20 +522,13 @@ function sendReminder_(emailFlag, smsFlag) {
 
 } // sendReminder_()
 
-function bol8() {
+function startNotificationTriggers_() {
   
-  var ui = SpreadsheetApp
-    .getUi();
+  var ui = SpreadsheetApp.getUi();
+  var us = SpreadsheetApp.getActiveSpreadsheet().getOwner();
+  var email = Session.getActiveUser().getEmail();
   
-  var us = SpreadsheetApp
-    .getActiveSpreadsheet()
-    .getOwner();
-  
-  var email = Session
-    .getActiveUser()
-    .getEmail();
-  
-  if (us.getEmail() == email) {
+  if (us.getEmail() === email) {
     
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var triggers = ScriptApp.getUserTriggers(ss);
@@ -564,8 +537,7 @@ function bol8() {
       
       if (triggers[i].getHandlerFunction() == 'saturday' || triggers[i].getHandlerFunction() == 'sunday') {
         ScriptApp.deleteTrigger(triggers[i]);
-      }
-      
+      }     
     }
     
     ScriptApp.newTrigger('sunday')
@@ -584,7 +556,7 @@ function bol8() {
     
     var result = ui.alert(
       'Info',
-      "Trigger was initiated successfully!", ui.ButtonSet.OK);
+      "Notification trigger was initiated successfully!", ui.ButtonSet.OK);
     
   } else {
     
@@ -593,22 +565,15 @@ function bol8() {
       "You don't have enough rights, please contact the owner!", ui.ButtonSet.OK);
   }
   
-} // bol8()
+} // startNotificationTriggers_()
 
-function bol9() {
+function stopNotificationTriggers_() {
 
-  var ui = SpreadsheetApp
-    .getUi();
+  var ui = SpreadsheetApp.getUi();
+  var us = SpreadsheetApp.getActiveSpreadsheet().getOwner();
+  var email = Session.getActiveUser().getEmail();
   
-  var us = SpreadsheetApp
-    .getActiveSpreadsheet()
-    .getOwner();
-  
-  var email = Session
-    .getActiveUser()
-    .getEmail();
-  
-  if (us.getEmail() == email) {
+  if (us.getEmail() === email) {
     
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var triggers = ScriptApp.getUserTriggers(ss);
@@ -630,7 +595,7 @@ function bol9() {
       "You don't have enough rights, please contact the owner!", ui.ButtonSet.OK);
   }
 
-} // bol9()
+} // stopNotificationTriggers_()
 
 Array.prototype.getUnique = function () {
 
