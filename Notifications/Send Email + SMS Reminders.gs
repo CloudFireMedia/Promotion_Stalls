@@ -4,6 +4,11 @@ function sunday_() {sendReminder_(false, true)}
 function sendReminder_(emailFlag, smsFlag) {
 
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  if (ss === null && !PRODUCTION_VERSION_) {
+    ss = SpreadsheetApp.openById(TEST_PROMOTIONS_SHEET_ID)
+  }
+  
   var sheet = ss.getSheetByName('Foyer + Atrium Promo Stalls');
   var dataRange = sheet.getDataRange();
   var timeZone = ss.getSpreadsheetTimeZone();
@@ -181,11 +186,11 @@ function sendReminder_(emailFlag, smsFlag) {
         if (uniqueEmail[j] == events[i][1]) {        
           row[0] = events[i][0]; // Name
           row[4] = events[i][4]; // Cell         
-          row[5] = getField(row[5], events[i][5]); // Team leader email
-          row[6] = getField(row[6], events[i][6]); // Team leader name
-          row[7] = getField(row[7], events[i][7]); // Event
-          row[8] = getField(row[8], events[i][8]); // Resources          
-          row[9] = getField(row[9], events[i][9]); // Stall                    
+          row[5] = getField(row[5], events[i][5], false); // Team leader email
+          row[6] = getField(row[6], events[i][6], false); // Team leader name
+          row[7] = getField(row[7], events[i][7], true); // Event
+          row[8] = getField(row[8], events[i][8], true); // Resources          
+          row[9] = getField(row[9], events[i][9], true); // Stall                    
         }
       }
       
@@ -308,21 +313,41 @@ function sendReminder_(emailFlag, smsFlag) {
     // Private Functions
     // -----------------
 
-    function getField(oldValue, newValue) {
+    function getField(oldValue, newValue, addSameValues) {
 
-      var returnValue = ''
+      newValue = newValue.trim();
+      var returnValue = '';
 
       if (newValue !== '' && typeof newValue !== 'undefined') { 
         
         if (oldValue === '') {
         
+          // No old value so just return new one
           returnValue = newValue;
           
         } else {
         
+          // We have an old value ...
+        
           if (oldValue.indexOf(newValue) === -1) {
           
+            // ... but we don't already have this one so add it
             returnValue = oldValue + "," + newValue;
+              
+          } else {
+          
+            // and we already have it ...
+
+            if (addSameValues) {
+            
+              // ... but add it anyway
+              returnValue = oldValue + "," + newValue;
+              
+            } else {
+
+              // ... so just use old value 
+              returnValue = oldValue;
+            }
           }
         }
       }

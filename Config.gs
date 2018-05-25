@@ -14,17 +14,15 @@
 // Config.gs
 // =========
 //
-// Dev: AndrewRoberts.net
-//
 // All the constants and configuration settings
 
 // Configuration
 // =============
 
 var SCRIPT_NAME = "PromotionStalls"
-var SCRIPT_VERSION = "v1.1"
+var SCRIPT_VERSION = "v1.2"
 
-var PRODUCTION_VERSION_ = true
+var PRODUCTION_VERSION_ = true;
 
 // Log Library
 // -----------
@@ -35,19 +33,29 @@ var DEBUG_LOG_DISPLAY_FUNCTION_NAMES_ = PRODUCTION_VERSION_ ? BBLog.DisplayFunct
 // Assert library
 // --------------
 
-var SEND_ERROR_EMAIL_ = PRODUCTION_VERSION_ ? true : false
-var HANDLE_ERROR_ = Assert.HandleError.THROW
-var ADMIN_EMAIL_ADDRESS_ = 'andrewr1969@gmail.com'
+var SEND_ERROR_EMAIL_ = PRODUCTION_VERSION_ ? true : false;
+var HANDLE_ERROR_ = Assert.HandleError.THROW;
+var ADMIN_EMAIL_ADDRESS_ = 'chcs.dev@gmail.com';
 
 // Tests
 // -----
+
+var TEST_PROMOTIONS_SHEET_ID = '1g0ROqoel54I-0BXIh65LGIqbcmIisdT9iOn19c9ogjY';
 
 var TEST_SEND_COC_EMAIL_ = true;
 var TEST_SEND_STAFF_EMAIL_ = true;
 
 var TEST_SEND_SMS_ = true;
 
-var TEST_USE_LIVE_STAFF_DATA = true;
+var TEST_USE_LIVE_STAFF_DATA = false;
+
+if (PRODUCTION_VERSION_ && 
+    (!TEST_SEND_COC_EMAIL_ ||
+     !TEST_SEND_STAFF_EMAIL_ ||
+     !TEST_SEND_SMS_ ||
+     !TEST_USE_LIVE_STAFF_DATA)) {
+  throw new Error('Test flags set in production mode')
+}
 
 // Constants/Enums
 // ===============
