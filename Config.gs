@@ -22,7 +22,7 @@
 // =============
 
 var SCRIPT_NAME = "PromotionStalls"
-var SCRIPT_VERSION = "v1.0"
+var SCRIPT_VERSION = "v1.1"
 
 var PRODUCTION_VERSION_ = true
 
@@ -47,7 +47,7 @@ var TEST_SEND_STAFF_EMAIL_ = true;
 
 var TEST_SEND_SMS_ = true;
 
-var TEST_USE_LIVE_STAFF_DATA = true
+var TEST_USE_LIVE_STAFF_DATA = true;
 
 // Constants/Enums
 // ===============
