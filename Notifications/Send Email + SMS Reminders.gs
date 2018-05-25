@@ -1,19 +1,12 @@
-//Redevelopment note 3: create setup process to define the following variables...
-// 
-
-
-//Redevelopment note 3: See [email 1](
-
-// https://share.polymail.io/v1/z/s/M3aQ4EPE6xVg4BpP/LR3tosPa9Fd8Xg9RUPt28olZBsnr_ZUIZFYvZUbH-bBVfx8pK82EovA0D99uLwGC7saxWpZXqQdVh5ECk3Ge98TmiYW2IyvHB-Y=
-//) and [email 2](
-// https://share.polymail.io/v1/z/s/asvroxLgewNsvcbr/4OivLuza93HmwYyVyqfiQOeSakFo5gWfNCk5TRzV71T7i_t5zOjjUln5fmqvvQPrum95SRdJwE6Xh6duL-SiN52DPkjLVoTDvo4=
-
-//1. Email 1 is the summary of events that triggered email 2
-//2. Email 2 should not have 'Greg Brewer,Greg Brewer,Greg Brewer, Team Leader' in the cc field, only 'Greg Brewer, Team Leader'
-//3. Doug Swilley should have received a second email for 'Kid's Camp', but only one email was sent (for 'VBS')
-
 // var CNN_STAFF_SHEET_ID = "1iiFmdqUd-CoWtUjZxVgGcNb74dPVh-l5kuU_G5mmiHI"; // live
 var CNN_STAFF_SHEET_ID = "1Ard4lE_DgXw7O8ijp4KPkFZ8-Csq1rmSSowIJTJKU5g"; // AJR Copy of CCN Staff Data Sheet (chcs.dev)
+
+var TEST_SEND_COC_EMAIL = true;
+var TEST_SEND_STAFF_EMAIL = false;
+
+var TEST_SEND_SMS = false;
+
+var SMS_SENT_FROM = "(615) 398-6380";
 
 /*
 function onOpen() {
@@ -67,99 +60,108 @@ function sendReminder_(emailFlag, smsFlag) {
     
     var row = "";
     
-    if (i >= 3) {
+    var dateColumn = values[i][0];
     
-      var dateColumn = values[i][0];
+    if (Utilities.formatDate(dateColumn, timeZone, "yyyy-MM-dd") !==
+        Utilities.formatDate(thisSunday, timeZone, "yyyy-MM-dd")) {
+      continue;
+    }
       
-      if (Utilities.formatDate(dateColumn, timeZone, "yyyy-MM-dd") ==
-          Utilities.formatDate(thisSunday, timeZone, "yyyy-MM-dd")) {
+    var tableHTL = '<table style="border-collapse:collapse; border:1px solid #ddd; "><tr>'
+    
+    var rowHTL = '<tr>' 
+    
+    for (var j = 1; j < values[i].length; j++) {
+      
+      if (values[i][j] != "") {
         
-        var tableHTL = '<table style="border-collapse:collapse; border:1px solid #ddd; "><tr>'
-        
-        var rowHTL = '<tr>' 
-        
-        for (var j = 1; j < values[i].length; j++) {
-          
-          if (values[i][j] != "") {
-            
-            if (values[1][j] != "") {
-              stall = values[1][j];
-            }
-            
-            tableHTL += '<th style="border:1px solid #ddd; background-color:#4CAF50; color:white;  padding: 15px;">' + stall + " " + values[2][j] + '</th>';
-            
-            var strStr = values[i][j];
-            
-            var matches = strStr.match(regE);
-            
-            while (match = regE.exec(strStr)) {
-              var evStr = match[1];
-              var unk = match[2];
-              var userStr = match[3];
-            }
-            
-            rowHTL = rowHTL + '<td style="border:1px solid #ddd; padding: 15px;">' + evStr + '<br><b>' + unk + '</b><br>' + userStr + '</td>';
-            
-            var staffNameFromSheet = userStr.trim();
-            
-            for (var k = 0; k < cnnStaffList.length; k++) {
-              
-              var nameFromCNN = ('' + cnnStaffList[k][0]).trim();
-              
-              if (staffNameFromSheet == nameFromCNN) {
-                
-                var row = cnnStaffList[k].slice(0);
-                row.push(evStr); // event
-                row.push(unk); // resource
-                row.push(stall + " " + values[2][j]); // stall
-                events.push(row);
-              }
-            }
-          }
+        if (values[1][j] != "") {
+          stall = values[1][j];
         }
         
-        if (emailFlag) {
+        tableHTL += 
+          '<th style="border:1px solid #ddd; background-color:#4CAF50; ' + 
+            'color:white;  padding: 15px;">' + stall + " " + values[2][j] + '</th>';
         
-          if (coc.length == 3 && coc[1] != "") {
+        var strStr = values[i][j];
+        
+        var matches = strStr.match(regE);
+        
+        while (match = regE.exec(strStr)) {
+          var evStr = match[1];
+          var unk = match[2];
+          var userStr = match[3];
+        }
+        
+        rowHTL = 
+          rowHTL + 
+          '<td style="border:1px solid #ddd; padding: 15px;">' + 
+          evStr + '<br><b>' + 
+          unk + '</b><br>' + 
+          userStr + 
+          '</td>';
+        
+        var staffNameFromSheet = userStr.trim();
+        
+        for (var k = 0; k < cnnStaffList.length; k++) {
+          
+          var nameFromCNN = ('' + cnnStaffList[k][0]).trim();
+          
+          if (staffNameFromSheet == nameFromCNN) {
             
-            var tableHTML = tableHTL + "</tr>" + rowHTL + "</tr></table>";
-            
-            var subjectS = 'Summary: Foyer + Atrium Promotion Stalls';
-
-            var bodyS = 
-              '<p>Hi {Campus Operations Coordinator},</p>' + 
-                '<p>cc: {Resource Team Leader}, {Congregational Care Director}</p>' + 
-                '<p>Below is a summary of promotional stalls that have been reserved in ' + 
-                  'the Foyer and/or Atrium for this Sunday morning.</p>';
- 
-            bodyS = bodyS.replace("{Campus Operations Coordinator}", coc[0]);
-            bodyS = bodyS.replace("{Congregational Care Director}", ccd[0]);
-            bodyS = bodyS.replace("{Resource Team Leader}", rtl[0]);
-            
-            bodyS += tableHTML + '<br><br>';
-            
-            var cc = ''
-            
-            if (ccd[1] !== '') {
-              cc = ccd[1] + ((rtl[1] !== '' ? ',' : '') + rtl[1]);
-            } else {
-              cc = (rtl[1] !== '') ? rtl[1] : '';
-            }
-            
-            var objE = {
-              name: "communications@ccnash.org",
-              to: coc[1],
-              cc: cc,
-              subject: subjectS,
-              htmlBody: bodyS
-            }
-            
-            MailApp.sendEmail(objE);            
+            var row = cnnStaffList[k].slice(0);
+            row.push(evStr); // event
+            row.push(unk); // resource
+            row.push(stall + " " + values[2][j]); // stall
+            events.push(row);
           }
         }
       }
     }
-  }
+    
+    if (emailFlag) {
+      
+      if (coc.length == 3 && coc[1] != "") {
+        
+        var tableHTML = tableHTL + "</tr>" + rowHTL + "</tr></table>";
+        
+        var subjectS = 'Summary: Foyer + Atrium Promotion Stalls';
+        
+        var bodyS = 
+            '<p>Hi {Campus Operations Coordinator},</p>' + 
+              '<p>cc: {Resource Team Leader}, {Congregational Care Director}</p>' + 
+                '<p>Below is a summary of promotional stalls that have been reserved in ' + 
+                  'the Foyer and/or Atrium for this Sunday morning.</p>';
+        
+        bodyS = bodyS.replace("{Campus Operations Coordinator}", coc[0]);
+        bodyS = bodyS.replace("{Congregational Care Director}", ccd[0]);
+        bodyS = bodyS.replace("{Resource Team Leader}", rtl[0]);
+        
+        bodyS += tableHTML + '<br><br>';
+        
+        var cc = ''
+        
+        if (ccd[1] !== '') {
+          cc = ccd[1] + ((rtl[1] !== '' ? ',' : '') + rtl[1]);
+        } else {
+          cc = (rtl[1] !== '') ? rtl[1] : '';
+        }
+        
+        var objE = {
+          name: "communications@ccnash.org",
+          to: coc[1],
+          cc: cc,
+          subject: subjectS,
+          htmlBody: bodyS
+        }
+        
+        if (TEST_SEND_COC_EMAIL) {
+          MailApp.sendEmail(objE);  
+        }
+      }
+    }
+    
+  } // For each row in Promotion Stalls GSheet
 
   sendMailToStaff(events, emailFlag, smsFlag);
 
@@ -303,15 +305,21 @@ function sendReminder_(emailFlag, smsFlag) {
           objE.cc = tEmail;
         }
 
-        MailApp.sendEmail(objE);
+        if (TEST_SEND_STAFF_EMAIL) {
+          MailApp.sendEmail(objE);
+        }
       }
       
       if (smsFlag && tPhone != "") {
       
-        var bodySMS = 'Hi {recipient}, This is a courtesy reminder that {event} been reserved in the Foyer and/or Atrium this Sunday morning. If you do NOT need this promotion stall, please notify Campus Operations ASAP.';
+        var bodySMS = 
+          'Hi {recipient}, This is a courtesy reminder that {event} been reserved in ' + 
+            'the Foyer and/or Atrium this Sunday morning. If you do NOT need this ' + 
+            'promotion stall, please notify Campus Operations ASAP.';
+            
         bodySMS = bodySMS.replace("{recipient}", sName);
         bodySMS = bodySMS.replace("{event}", eventSt);
-//        sendSms(tPhone, bodySMS);
+        sendSms(tPhone, bodySMS);
       }      
       
     } // for each staff member
@@ -382,12 +390,17 @@ function sendReminder_(emailFlag, smsFlag) {
 
     function sendSms(to, body) {
     
+      if (!TEST_SEND_SMS) {
+        Logger.log('To: ' + to + ', body: ' + body);
+        return;
+      }
+    
       var messages_url = "https://api.twilio.com/2010-04-01/Accounts/ACaa3afbcaac665e62f1fd38f670fe4acd/Messages.json";
       
       var payload = {
         "To": to,
         "Body": body,
-        "From": "(615) 398-6380"
+        "From": SMS_SENT_FROM,
       };
       
       var options = {
