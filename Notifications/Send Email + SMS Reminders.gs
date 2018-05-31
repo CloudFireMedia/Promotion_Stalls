@@ -58,8 +58,8 @@ function sendReminder_(emailFlag, smsFlag) {
         }
         
         tableHTL += 
-          '<th style="border:1px solid #ddd; background-color:#4CAF50; ' + 
-            'color:white;  padding: 15px;">' + stall + " " + values[2][j] + '</th>';
+          '<th style="border:1px solid #000000; background-color:#d7d7d7; ' + 
+            'padding: 15px;">' + stall + " " + values[2][j] + '</th>';
         
         var strStr = values[i][j];
         
@@ -73,7 +73,7 @@ function sendReminder_(emailFlag, smsFlag) {
         
         rowHTL = 
           rowHTL + 
-          '<td style="border:1px solid #ddd; padding: 15px;">' + 
+          '<td align="center" bgcolor="#ffff00" style="border:1px solid #000000; padding: 15px;">' + 
           evStr + '<br><b>' + 
           unk + '</b><br>' + 
           userStr + 
@@ -106,10 +106,10 @@ function sendReminder_(emailFlag, smsFlag) {
         var subjectS = 'Summary: Foyer + Atrium Promotion Stalls';
         
         var bodyS = 
-            '<p>Hi {Campus Operations Coordinator},</p>' + 
-              '<p>cc: {Resource Team Leader}, {Congregational Care Director}</p>' + 
-                '<p>Below is a summary of promotional stalls that have been reserved in ' + 
-                  'the Foyer and/or Atrium for this Sunday morning.</p>';
+            '<p>Hi {Campus Operations Coordinator},' + 
+              '<br />cc: {Resource Team Leader}, {Congregational Care Director}</p>' + 
+              '<p>Below is a summary of promotional stalls and promotional assets ' + 
+              'that have been reserved in the Foyer and/or Atrium for this Sunday morning.</p>';
         
         bodyS = bodyS.replace("{Campus Operations Coordinator}", coc[0]);
         bodyS = bodyS.replace("{Congregational Care Director}", ccd[0]);
@@ -135,7 +135,7 @@ function sendReminder_(emailFlag, smsFlag) {
         
         if (TEST_SEND_COC_EMAIL_) {
           MailApp.sendEmail(objE);
-          Log_.info('Sent reminder to ' + objE.to);
+          Log_.info('Sent reminder to ' + objE.to + '. Body: ' + bodyS);
         } else {
           Log_.warning('COC Email disabled (not sent to ' + objE.to + ')');
         }
@@ -243,7 +243,8 @@ function sendReminder_(emailFlag, smsFlag) {
         var subject = 'Reminder: Promotion stall in foyer/atrium';
                 
         var body = 
-          '<p>Hi {recipient},</p>' + 
+          '<p>Hi {recipient},' + 
+          '{team leader}</p>' + 
           '<p>This is a courtesy reminder that {event} been reserved for this Sunday morning.</p>' + 
           '<p>{event table}</p>'
           '<p>Please note:</p>' +  
@@ -261,7 +262,7 @@ function sendReminder_(emailFlag, smsFlag) {
         body = body.replace("{recipient}", sName);
         
         if (tEmail !== "") {        
-          body = body.replace("{team leader}", "<p> cc: " + tName + ", Team Leader</p>");
+          body = body.replace("{team leader}", "<br/>cc: " + tName + ", Team Leader");
         } else {
           body = body.replace("{team leader}", "");        
         }
@@ -288,7 +289,7 @@ function sendReminder_(emailFlag, smsFlag) {
 
         if (TEST_SEND_STAFF_EMAIL_) {
           MailApp.sendEmail(objE);
-          Log_.info('Sent reminder to ' + objE.to);
+          Log_.info('Sent reminder to ' + objE.to + '. Body: ' + body);
         } else {
           Log_.warning('Staff Email disabled (not sent to ' + objE.to + ')');
         }
@@ -296,13 +297,17 @@ function sendReminder_(emailFlag, smsFlag) {
       
       if (smsFlag && tPhone != "") {
       
+        var sheetUrl = SpreadsheetApp.getActive().getUrl();
+      
         var bodySMS = 
           'Hi {recipient}, This is a courtesy reminder that {event} been reserved in ' + 
-            'the Foyer and/or Atrium this Sunday morning. If you do NOT need this ' + 
-            'promotion stall, please notify Campus Operations ASAP.';
+            'the Foyer and/or Atrium this Sunday morning. If you do NOT need the ' + 
+            'promotion stall(s) reserved for you, please notify Campus Operations ASAP. ' +
+            'Click this link ({Promo Stalls spreadsheet URL}) for more information.'
             
         bodySMS = bodySMS.replace("{recipient}", sName);
         bodySMS = bodySMS.replace("{event}", eventSt);
+        bodySMS = bodySMS.replace("{Promo Stalls spreadsheet URL}", sheetUrl);        
         sendSms(tPhone, bodySMS);
       }      
       
@@ -374,11 +379,11 @@ function sendReminder_(emailFlag, smsFlag) {
         var stall = stalls[eventIndex];
                   
         headerHTML += 
-          '<th style="border:1px solid #ddd; background-color:#4CAF50; color:white; ' + 
+          '<th style="border:1px solid #000000; background-color:#d7d7d7; ' + 
             'padding: 15px;">' + stall + '</th>';
                   
         rowHTML += 
-          '<td style="border:1px solid #ddd; padding: 15px;">' + event + '<br><b>' + 
+          '<td bgcolor="ffff00" align="center" style="border:1px solid #000000; padding: 15px;">' + event + '<br><b>' + 
             resource + '</b><br>' + name + '</td>';        
       }
     

@@ -20,7 +20,7 @@
 // =============
 
 var SCRIPT_NAME = "PromotionStalls"
-var SCRIPT_VERSION = "v1.2"
+var SCRIPT_VERSION = "v1.3"
 
 var PRODUCTION_VERSION_ = true;
 
@@ -42,7 +42,7 @@ var ADMIN_EMAIL_ADDRESS_ = 'chcs.dev@gmail.com';
 
 var TEST_PROMOTIONS_SHEET_ID = '1g0ROqoel54I-0BXIh65LGIqbcmIisdT9iOn19c9ogjY';
 
-var TEST_SEND_COC_EMAIL_ = true;
+var TEST_SEND_COC_EMAIL_   = true;
 var TEST_SEND_STAFF_EMAIL_ = true;
 
 var TEST_SEND_SMS_ = true;
