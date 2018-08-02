@@ -6,7 +6,7 @@ function sendReminder_(emailFlag, smsFlag) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
   if (ss === null && !PRODUCTION_VERSION_) {
-    ss = SpreadsheetApp.openById(TEST_PROMOTIONS_SHEET_ID)
+    ss = SpreadsheetApp.openById(TEST_PROMOTIONS_SHEET_ID_)
   }
   
   var sheet = ss.getSheetByName('Foyer + Atrium Promo Stalls');
@@ -40,8 +40,10 @@ function sendReminder_(emailFlag, smsFlag) {
     
     var dateColumn = values[i][0];
     
-    if (Utilities.formatDate(dateColumn, timeZone, "yyyy-MM-dd") !==
-        Utilities.formatDate(thisSunday, timeZone, "yyyy-MM-dd")) {
+    var nextDate = Utilities.formatDate(dateColumn, timeZone, "yyyy-MM-dd");
+    var thisSundayDate = Utilities.formatDate(thisSunday, timeZone, "yyyy-MM-dd");
+    
+    if (nextDate !== thisSundayDate) {
       continue;
     }
       
@@ -50,12 +52,12 @@ function sendReminder_(emailFlag, smsFlag) {
     var rowHTL = '<tr>' 
     
     for (var j = 1; j < values[i].length; j++) {
+    
+      var nextValue = values[i][j]
       
-      if (values[i][j] != "") {
-        
-        if (values[1][j] != "") {
-          stall = values[1][j];
-        }
+      if (nextValue != "") {
+      
+        stall = getStall(j);
         
         tableHTL += 
           '<th style="border:1px solid #000000; background-color:#d7d7d7; ' + 
@@ -95,8 +97,9 @@ function sendReminder_(emailFlag, smsFlag) {
           }
         }
       }
-    }
-    
+      
+    } // For each column
+
     if (emailFlag) {
       
       if (coc.length == 3 && coc[1] != "") {
@@ -106,9 +109,9 @@ function sendReminder_(emailFlag, smsFlag) {
         var subjectS = 'Summary: Foyer + Atrium Promotion Stalls';
         
         var bodyS = 
-            '<p>Hi {Campus Operations Coordinator},' + 
+            '<p>Hi {Campus Operations Coordinator},'                                 + 
               '<br />cc: {Resource Team Leader}, {Congregational Care Director}</p>' + 
-              '<p>Below is a summary of promotional stalls and promotional assets ' + 
+              '<p>Below is a summary of promotional stalls and promotional assets '  + 
               'that have been reserved in the Foyer and/or Atrium for this Sunday morning.</p>';
         
         bodyS = bodyS.replace("{Campus Operations Coordinator}", coc[0]);
@@ -150,7 +153,37 @@ function sendReminder_(emailFlag, smsFlag) {
   
   // Private Functions
   // -----------------
+
+  /**
+   * Work back along row 2 to find the last stall room
+   *
+   * @param {number} lastColumnIndex 
+   */
+   
+  function getStall(lastColumnIndex) {
   
+    var stall = '';
+    var cellIndex = lastColumnIndex;
+    var foundStall = false;
+    
+    while (!foundStall && cellIndex > 0) {
+    
+      if (values[1][cellIndex] !== "") {
+        stall = values[1][cellIndex];
+        foundStall = true;
+      }
+     
+      cellIndex--;
+    }
+
+    if (stall === '') {
+      throw new Error('Could not find stall room');
+    }
+
+    return stall;
+
+  } // sendReminder_.getStall()
+
   /** 
    * Send notifications (email or SMS out to staff)
    *
@@ -243,20 +276,20 @@ function sendReminder_(emailFlag, smsFlag) {
         var subject = 'Reminder: Promotion stall in foyer/atrium';
                 
         var body = 
-          '<p>Hi {recipient},' + 
-          '{team leader}</p>' + 
+          '<p>Hi {recipient},'                                                                     + 
+          '{team leader}</p>'                                                                      + 
           '<p>This is a courtesy reminder that {event} been reserved for this Sunday morning.</p>' + 
-          '<p>{event table}</p>'
-          '<p>Please note:</p>' +  
-          '<ul>' + 
-          '<li>If promotion for your event includes print literature (i.e. sign-up sheets, ' + 
-            'tickets, handbills, etc.), you must bring these items with you. They will not ' + 
-            'be provided by the Facilities setup crew.' + 
-          '<li>If you no longer need this promotion stall, please notify ' + 
-            '{First Last Name of Campus Operations Coordinator} at ' + 
-            '{Campus Operations Coordinator Cell Phone Number} ASAP.' + 
-          '<li>If you have any other questions, please contact ' + 
-            '{First Last Name of Communications Director} at {Comms Director Cell Phone Number}.' +
+          '<p>{event table}</p>'                                                                   +
+          '<p>Please note:</p>'                                                                    +  
+          '<ul>'                                                                                   + 
+          '<li>If promotion for your event includes print literature (i.e. sign-up sheets, '       + 
+            'tickets, handbills, etc.), you must bring these items with you. They will not '       + 
+            'be provided by the Facilities setup crew.'                                            + 
+          '<li>If you no longer need this promotion stall, please notify '                         + 
+            '{First Last Name of Campus Operations Coordinator} at '                               + 
+            '{Campus Operations Coordinator Cell Phone Number} ASAP.'                              + 
+          '<li>If you have any other questions, please contact '                                   + 
+            '{First Last Name of Communications Director} at {Comms Director Cell Phone Number}.'  +
           '</ul>'
                 
         body = body.replace("{recipient}", sName);
