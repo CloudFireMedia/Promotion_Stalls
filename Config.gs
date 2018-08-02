@@ -20,7 +20,7 @@
 // =============
 
 var SCRIPT_NAME = "PromotionStalls"
-var SCRIPT_VERSION = "v1.3"
+var SCRIPT_VERSION = "v1.4"
 
 var PRODUCTION_VERSION_ = true;
 
@@ -28,7 +28,7 @@ var PRODUCTION_VERSION_ = true;
 // -----------
 
 var DEBUG_LOG_LEVEL_ = PRODUCTION_VERSION_ ? BBLog.Level.INFO : BBLog.Level.FINER
-var DEBUG_LOG_DISPLAY_FUNCTION_NAMES_ = PRODUCTION_VERSION_ ? BBLog.DisplayFunctionNames.NO : BBLog.DisplayFunctionNames.YES
+var DEBUG_LOG_DISPLAY_FUNCTION_NAMES_ = PRODUCTION_VERSION_ ? BBLog.DisplayFunctionNames.NO : BBLog.DisplayFunctionNames.NO
 
 // Assert library
 // --------------
@@ -40,27 +40,27 @@ var ADMIN_EMAIL_ADDRESS_ = 'chcs.dev@gmail.com';
 // Tests
 // -----
 
-var TEST_PROMOTIONS_SHEET_ID = '1g0ROqoel54I-0BXIh65LGIqbcmIisdT9iOn19c9ogjY';
+var TEST_PROMOTIONS_SHEET_ID_ = '15D1U6VvxqXO4k6ebQX4U6oKyod3zxYNu0nuifThCEwA';
 
 var TEST_SEND_COC_EMAIL_   = true;
 var TEST_SEND_STAFF_EMAIL_ = true;
 
 var TEST_SEND_SMS_ = true;
 
-var TEST_USE_LIVE_STAFF_DATA = true;
+var TEST_USE_LIVE_STAFF_DATA_ = true;
 
 if (PRODUCTION_VERSION_ && 
     (!TEST_SEND_COC_EMAIL_ ||
      !TEST_SEND_STAFF_EMAIL_ ||
      !TEST_SEND_SMS_ ||
-     !TEST_USE_LIVE_STAFF_DATA)) {
+     !TEST_USE_LIVE_STAFF_DATA_)) {
   throw new Error('Test flags set in production mode')
 }
 
 // Constants/Enums
 // ===============
 
-if (TEST_USE_LIVE_STAFF_DATA) {
+if (TEST_USE_LIVE_STAFF_DATA_) {
   var CNN_STAFF_SHEET_ID_ = "1iiFmdqUd-CoWtUjZxVgGcNb74dPVh-l5kuU_G5mmiHI"; // live
 } else {
   var CNN_STAFF_SHEET_ID_ = "1Ard4lE_DgXw7O8ijp4KPkFZ8-Csq1rmSSowIJTJKU5g"; // AJR Copy of CCN Staff Data Sheet (chcs.dev)
