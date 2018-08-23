@@ -73,7 +73,7 @@ function addNewRow (arg1, arg2, properties, lock) {return eventHandler_(EVENT_HA
 function onOpen() {
 
   SpreadsheetApp.getUi()
-    .createMenu('[ Promotion Stalls ]')
+    .createMenu('CloudFire')
     .addItem('Hide Empty Columns', 'hideEmptyColumns')
     .addItem('unHide Empty Columns', 'unHideAllColumns')
     .addSeparator()
