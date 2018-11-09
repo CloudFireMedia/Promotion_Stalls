@@ -20,9 +20,9 @@
 // =============
 
 var SCRIPT_NAME = "PromotionStalls"
-var SCRIPT_VERSION = "v1.5"
+var SCRIPT_VERSION = "v1.5.dev_ajr"
 
-var PRODUCTION_VERSION_ = true;
+var PRODUCTION_VERSION_ = false;
 
 // Log Library
 // -----------
@@ -35,19 +35,17 @@ var DEBUG_LOG_DISPLAY_FUNCTION_NAMES_ = PRODUCTION_VERSION_ ? BBLog.DisplayFunct
 
 var SEND_ERROR_EMAIL_ = PRODUCTION_VERSION_ ? true : false;
 var HANDLE_ERROR_ = Assert.HandleError.THROW;
-var ADMIN_EMAIL_ADDRESS_ = 'chcs.dev@gmail.com';
+var ADMIN_EMAIL_ADDRESS_ = 'dev@cloudfire.media';
 
 // Tests
 // -----
 
-var TEST_PROMOTIONS_SHEET_ID_ = '15D1U6VvxqXO4k6ebQX4U6oKyod3zxYNu0nuifThCEwA';
+var TEST_PROMOTIONS_SHEET_ID_ = '1VrtkuNDBQ47-QUkVKbi2vy_qjA0MCJSbwcZYV7XSNP0'; // Test Copy of Sunday Promotion Stalls Calendar (ar@cf)
 
-var TEST_SEND_COC_EMAIL_   = true;
-var TEST_SEND_STAFF_EMAIL_ = true;
+var TEST_SEND_COC_EMAIL_   = false;
+var TEST_SEND_STAFF_EMAIL_ = false;
 
-var TEST_SEND_SMS_ = true;
-
-var TEST_USE_LIVE_STAFF_DATA_ = true;
+var TEST_SEND_SMS_ = false;
 
 if (PRODUCTION_VERSION_ && 
     (!TEST_SEND_COC_EMAIL_ ||
@@ -60,13 +58,7 @@ if (PRODUCTION_VERSION_ &&
 // Constants/Enums
 // ===============
 
-if (TEST_USE_LIVE_STAFF_DATA_) {
-  var CNN_STAFF_SHEET_ID_ = "1iiFmdqUd-CoWtUjZxVgGcNb74dPVh-l5kuU_G5mmiHI"; // live
-} else {
-  var CNN_STAFF_SHEET_ID_ = "1Ard4lE_DgXw7O8ijp4KPkFZ8-Csq1rmSSowIJTJKU5g"; // AJR Copy of CCN Staff Data Sheet (chcs.dev)
-}
-
-var SMS_SENT_FROM_ = "(615) 398-6380";
+var STALLS_SHEET_NAME_ = "Foyer + Atrium Promo Stalls";
 
 // Function Template
 // -----------------
