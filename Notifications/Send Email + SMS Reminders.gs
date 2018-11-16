@@ -607,18 +607,42 @@ function startNotificationTriggers_() {
       }     
     }
     
-    ScriptApp.newTrigger('sunday')
-      .timeBased()
-      .onWeekDay(ScriptApp.WeekDay.SUNDAY)
-      .atHour(6)
-      .nearMinute(15)
-      .create();
-    
-    ScriptApp.newTrigger('saturday')
+    ScriptApp.newTrigger('saturday') // Every Saturday at 7am
       .timeBased()
       .onWeekDay(ScriptApp.WeekDay.SATURDAY)
-      .atHour(11)
-      .nearMinute(15)
+      .atHour(7)
+      .create();
+
+    ScriptApp.newTrigger('sunday') // Every Sunday at 8am
+      .timeBased()
+      .onWeekDay(ScriptApp.WeekDay.SUNDAY)
+      .atHour(8)
+      .create();
+    
+    ScriptApp.newTrigger('deleteExpiredRows') // Every Monday at 1am
+      .timeBased()
+      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+      .atHour(1)
+      .create();
+      
+// TODO - https://trello.com/c/I6fx54K8
+//
+//    ScriptApp.newTrigger('addNewRow') // Every Monday at 2am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+//      .atHour(2)
+//      .create();
+
+    ScriptApp.newTrigger('unHideAllColumns') // Every Monday at 3am
+      .timeBased()
+      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+      .atHour(1)
+      .create();
+
+    ScriptApp.newTrigger('hideEmptyColumns') // Every Wednesday at 1am
+      .timeBased()
+      .onWeekDay(ScriptApp.WeekDay.WEDNESDAY)
+      .atHour(1)
       .create();
     
     var result = ui.alert(
