@@ -20,7 +20,7 @@
 // =============
 
 var SCRIPT_NAME = "PromotionStalls"
-var SCRIPT_VERSION = "v1.5"
+var SCRIPT_VERSION = "v1.5.dev_cdb"
 
 var PRODUCTION_VERSION_ = true;
 
