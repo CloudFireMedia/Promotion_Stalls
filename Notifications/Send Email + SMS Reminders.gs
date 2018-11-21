@@ -9,7 +9,7 @@ function sendReminder_(emailFlag, smsFlag) {
     ss = SpreadsheetApp.openById(TEST_PROMOTIONS_SHEET_ID_)
   }
   
-  var sheet = ss.getSheetByName('Foyer + Atrium Promo Stalls');
+  var sheet = ss.getSheetByName(STALLS_SHEET_NAME_);
   var dataRange = sheet.getDataRange();
   var timeZone = ss.getSpreadsheetTimeZone();
   var values = dataRange.getValues();
@@ -18,9 +18,11 @@ function sendReminder_(emailFlag, smsFlag) {
   var thisSunday = getNextSunday('sunday', true);
   
   var regE = new RegExp('(.*)\n(.*)\n(.*)', 'ig');
+  
+  var staffSheetId = Config.get('STAFF_DATA_GSHEET_ID');
 
   var allStaff = SpreadsheetApp
-    .openById(CNN_STAFF_SHEET_ID_)
+    .openById(staffSheetId)
     .getSheetByName('Staff')
     .getDataRange()
     .getValues();
@@ -437,12 +439,12 @@ function sendReminder_(emailFlag, smsFlag) {
         return;
       }
     
-      var messages_url = "https://api.twilio.com/2010-04-01/Accounts/ACaa3afbcaac665e62f1fd38f670fe4acd/Messages.json";
+      var smsSentFrom = Config.get('TWILIO_SMS_NUMBER');
       
       var payload = {
         "To": to,
         "Body": body,
-        "From": SMS_SENT_FROM_,
+        "From": smsSentFrom,
       };
       
       var options = {
@@ -453,8 +455,10 @@ function sendReminder_(emailFlag, smsFlag) {
       options.headers = {
         "Authorization": "Basic " + Utilities.base64Encode("ACaa3afbcaac665e62f1fd38f670fe4acd:e3c6eb511b2e72cb9dd6bcf813c9f65c")
       };
-      
-      UrlFetchApp.fetch(messages_url, options);
+
+      var messagesUrl = Config.get('TWILIO_SMS_URL');
+
+      UrlFetchApp.fetch(messagesUrl, options);
       Log_.info('SMS sent to: ' + to + ', body: ' + body);
         
     } // sendReminder_.sendMailToStaff.sendSms()
@@ -465,7 +469,7 @@ function sendReminder_(emailFlag, smsFlag) {
   
     var staffFromSheet = [];
     
-    var sp = SpreadsheetApp.openById(CNN_STAFF_SHEET_ID_);
+    var sp = SpreadsheetApp.openById(staffSheetId);
     var sh = sp.getSheetByName('Staff');
     var data = sh.getDataRange().getValues();
     
@@ -603,19 +607,45 @@ function startNotificationTriggers_() {
       }     
     }
     
-    ScriptApp.newTrigger('sunday')
-      .timeBased()
-      .onWeekDay(ScriptApp.WeekDay.SUNDAY)
-      .atHour(6)
-      .nearMinute(15)
-      .create();
-    
-    ScriptApp.newTrigger('saturday')
+    ScriptApp.newTrigger('saturday') // Every Saturday at 7am
       .timeBased()
       .onWeekDay(ScriptApp.WeekDay.SATURDAY)
-      .atHour(11)
-      .nearMinute(15)
+      .atHour(7)
       .create();
+
+// TODO - Add-ons can only have one clock trigger - trello.com/c/YdInBoe4
+
+//    ScriptApp.newTrigger('sunday') // Every Sunday at 8am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.SUNDAY)
+//      .atHour(8)
+//      .create();
+//    
+//    ScriptApp.newTrigger('deleteExpiredRows') // Every Monday at 1am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+//      .atHour(1)
+//      .create();
+      
+// TODO - bug in addNewRow() - https://trello.com/c/I6fx54K8
+//
+//    ScriptApp.newTrigger('addNewRow') // Every Monday at 2am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+//      .atHour(2)
+//      .create();
+
+//    ScriptApp.newTrigger('unHideAllColumns') // Every Monday at 3am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+//      .atHour(3)
+//      .create();
+//
+//    ScriptApp.newTrigger('hideEmptyColumns') // Every Wednesday at 1am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.WEDNESDAY)
+//      .atHour(1)
+//      .create();
     
     var result = ui.alert(
       'Info',
