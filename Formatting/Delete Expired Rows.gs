@@ -1,7 +1,7 @@
 function deleteExpiredRows_() {
   
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("Foyer + Atrium Promo Stalls");
+  var sheet = ss.getSheetByName(STALLS_SHEET_NAME_);
   var datarange = sheet.getDataRange();
   var lastrow = datarange.getLastRow();
   var values = datarange.getValues(); // get all data in a 2D array

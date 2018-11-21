@@ -1,13 +1,13 @@
 function hideEmptyColumns_() {
   
-  var ss = SpreadsheetApp.getActive(),
-      sheet = ss.getSheetByName('Foyer + Atrium Promo Stalls'),
-      startRow = 4,
-      startColumn = 1,
-      numberOfRows = 1,
-      numberOfColumns = sheet.getMaxColumns() - startColumn,
-      range = sheet.getRange(startRow, startColumn, numberOfRows, numberOfColumns),
-      row = range.getValues()[0];
+  var ss = SpreadsheetApp.getActive();
+  var sheet = ss.getSheetByName(STALLS_SHEET_NAME_);
+  var startRow = 4;
+  var startColumn = 1;
+  var numberOfRows = 1;
+  var numberOfColumns = sheet.getMaxColumns() - startColumn;
+  var range = sheet.getRange(startRow, startColumn, numberOfRows, numberOfColumns);
+  var row = range.getValues()[0];
   
   sheet.unhideColumn(range);
   

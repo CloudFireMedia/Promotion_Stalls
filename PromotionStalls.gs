@@ -64,31 +64,6 @@ function unHideAllColumns (arg1, arg2, properties, lock) {return eventHandler_(E
 function deleteExpiredRows (arg1, arg2, properties, lock) {return eventHandler_(EVENT_HANDLERS_.deleteExpiredRows, arg1, arg2, properties, lock)}
 function addNewRow (arg1, arg2, properties, lock) {return eventHandler_(EVENT_HANDLERS_.addNewRow, arg1, arg2, properties, lock)}
 
-/**
- * Event handler for the sheet being opened. This is a special case
- * as all it can do is create a menu whereas the usual eventHandler_()
- * does things we don't have permission for at this stage.
- */
-
-function onOpen() {
-
-  SpreadsheetApp.getUi()
-    .createMenu('CloudFire')
-    .addItem('Hide Empty Columns', 'hideEmptyColumns')
-    .addItem('unHide Empty Columns', 'unHideAllColumns')
-    .addSeparator()
-	.addItem('Initialize notification triggers', 'startNotificationTriggers')
-	.addItem('Stop notification triggers', 'stopNotificationTriggers')    
-    .addSeparator()
-	.addItem('Send Saturday notifications', 'saturday')    
-	.addItem('Send Sunday notifications', 'sunday')    
-    .addSeparator()
-	.addItem('Delete expired rows', 'deleteExpiredRows')    
-	.addItem('Add new rows', 'addNewRow')    
-    .addToUi();
-    
-} // onOpen()
-
 // Private Functions
 // =================
 
@@ -174,7 +149,18 @@ function eventHandler_(config, arg1, arg2, properties, lock) {
     
   } catch (error) {
   
-    Assert.handleError(error, config[2], Log_)
+    var assertConfig = {
+      error:          error,
+      userMessage:    config[2],
+      log:            Log_,
+      handleError:    Assert.HandleError.DISPLAY_FULL, 
+      sendErrorEmail: SEND_ERROR_EMAIL_, 
+      emailAddress:   ADMIN_EMAIL_ADDRESS_,
+      scriptName:     SCRIPT_NAME,
+      scriptVersion:  SCRIPT_VERSION, 
+    }
+
+    Assert.handleError(assertConfig) 
     
   } finally {
   
@@ -196,14 +182,6 @@ function eventHandler_(config, arg1, arg2, properties, lock) {
       
     var userEmail = Session.getEffectiveUser().getEmail()
 
-    Assert.init({
-      handleError:    HANDLE_ERROR_, 
-      sendErrorEmail: SEND_ERROR_EMAIL_, 
-      emailAddress:   ADMIN_EMAIL_ADDRESS_ + ',' + userEmail,
-      scriptName:     SCRIPT_NAME,
-      scriptVersion:  SCRIPT_VERSION, 
-    })
-
     Log_ = BBLog.getLog({
       level:                DEBUG_LOG_LEVEL_, 
       displayFunctionNames: DEBUG_LOG_DISPLAY_FUNCTION_NAMES_,
@@ -213,6 +191,3 @@ function eventHandler_(config, arg1, arg2, properties, lock) {
   } // eventHandler_.initialseEventHandler() 
 
 } // eventHandler_()
-
-// Private event handlers
-// ----------------------
