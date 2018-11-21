@@ -613,19 +613,21 @@ function startNotificationTriggers_() {
       .atHour(7)
       .create();
 
-    ScriptApp.newTrigger('sunday') // Every Sunday at 8am
-      .timeBased()
-      .onWeekDay(ScriptApp.WeekDay.SUNDAY)
-      .atHour(8)
-      .create();
-    
-    ScriptApp.newTrigger('deleteExpiredRows') // Every Monday at 1am
-      .timeBased()
-      .onWeekDay(ScriptApp.WeekDay.MONDAY)
-      .atHour(1)
-      .create();
+// TODO - Add-ons can only have one clock trigger - trello.com/c/YdInBoe4
+
+//    ScriptApp.newTrigger('sunday') // Every Sunday at 8am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.SUNDAY)
+//      .atHour(8)
+//      .create();
+//    
+//    ScriptApp.newTrigger('deleteExpiredRows') // Every Monday at 1am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+//      .atHour(1)
+//      .create();
       
-// TODO - https://trello.com/c/I6fx54K8
+// TODO - bug in addNewRow() - https://trello.com/c/I6fx54K8
 //
 //    ScriptApp.newTrigger('addNewRow') // Every Monday at 2am
 //      .timeBased()
@@ -633,17 +635,17 @@ function startNotificationTriggers_() {
 //      .atHour(2)
 //      .create();
 
-    ScriptApp.newTrigger('unHideAllColumns') // Every Monday at 3am
-      .timeBased()
-      .onWeekDay(ScriptApp.WeekDay.MONDAY)
-      .atHour(3)
-      .create();
-
-    ScriptApp.newTrigger('hideEmptyColumns') // Every Wednesday at 1am
-      .timeBased()
-      .onWeekDay(ScriptApp.WeekDay.WEDNESDAY)
-      .atHour(1)
-      .create();
+//    ScriptApp.newTrigger('unHideAllColumns') // Every Monday at 3am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.MONDAY)
+//      .atHour(3)
+//      .create();
+//
+//    ScriptApp.newTrigger('hideEmptyColumns') // Every Wednesday at 1am
+//      .timeBased()
+//      .onWeekDay(ScriptApp.WeekDay.WEDNESDAY)
+//      .atHour(1)
+//      .create();
     
     var result = ui.alert(
       'Info',

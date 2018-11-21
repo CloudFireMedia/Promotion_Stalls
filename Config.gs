@@ -50,7 +50,7 @@ var TEST_SEND_SMS_ = true;
 if (PRODUCTION_VERSION_ && 
     (!TEST_SEND_COC_EMAIL_ ||
      !TEST_SEND_STAFF_EMAIL_ ||
-     !TEST_SEND_SMS)) {
+     !TEST_SEND_SMS_)) {
   throw new Error('Test flags set in production mode')
 }
 
