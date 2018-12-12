@@ -19,8 +19,8 @@
 // Configuration
 // =============
 
-var SCRIPT_NAME = "PromotionStalls"
-var SCRIPT_VERSION = "v1.6"
+var SCRIPT_NAME = "PromotionStalls";
+var SCRIPT_VERSION = "v1.7";
 
 var PRODUCTION_VERSION_ = true;
 
