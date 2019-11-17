@@ -1,3 +1,9 @@
+
+// v1.7.1
+// ------
+//
+// - Updated 'Staff' to 'Staff Directory'
+
 // v1.7
 // ----
 //
