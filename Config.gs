@@ -20,7 +20,7 @@
 // =============
 
 var SCRIPT_NAME = "PromotionStalls";
-var SCRIPT_VERSION = "v1.7";
+var SCRIPT_VERSION = "v1.7.1";
 
 var PRODUCTION_VERSION_ = true;
 
@@ -58,6 +58,7 @@ if (PRODUCTION_VERSION_ &&
 // ===============
 
 var STALLS_SHEET_NAME_ = "Foyer + Atrium Promo Stalls";
+var STAFF_SHEET_NAME_ = 'Staff Directory';
 
 // Function Template
 // -----------------
