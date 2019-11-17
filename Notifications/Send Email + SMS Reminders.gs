@@ -21,7 +21,7 @@ function sendReminder_(emailFlag, smsFlag) {
 
   var allStaff = SpreadsheetApp
     .openById(CNN_STAFF_SHEET_ID_)
-    .getSheetByName('Staff')
+    .getSheetByName(STAFF_SHEET_NAME_)
     .getDataRange()
     .getValues();
     
@@ -466,7 +466,7 @@ function sendReminder_(emailFlag, smsFlag) {
     var staffFromSheet = [];
     
     var sp = SpreadsheetApp.openById(CNN_STAFF_SHEET_ID_);
-    var sh = sp.getSheetByName('Staff');
+    var sh = sp.getSheetByName(STAFF_SHEET_NAME_);
     var data = sh.getDataRange().getValues();
     
     for (var i = 2; i < data.length; i++) {

@@ -20,7 +20,7 @@
 // =============
 
 var SCRIPT_NAME = "PromotionStalls"
-var SCRIPT_VERSION = "v1.5"
+var SCRIPT_VERSION = "v1.5.1"
 
 var PRODUCTION_VERSION_ = true;
 
@@ -67,6 +67,8 @@ if (TEST_USE_LIVE_STAFF_DATA_) {
 }
 
 var SMS_SENT_FROM_ = "(615) 398-6380";
+
+var STAFF_SHEET_NAME_ = 'Staff Directory'
 
 // Function Template
 // -----------------
