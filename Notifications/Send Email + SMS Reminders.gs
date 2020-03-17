@@ -33,7 +33,7 @@ function sendReminder_(emailFlag, smsFlag) {
   
   var rtl = getTeamLeader("RESOURCE TEAM");
 
-  var cnnStaffList = getStaffFromMainSpreadsheet();
+  var cnnStaffList = getStaff();
   var events = [];
   
   for (var i = 3; i < values.length; i++) {
@@ -145,11 +145,12 @@ function sendReminder_(emailFlag, smsFlag) {
           Log_.warning('COC Email disabled (not sent to ' + objE.to + ')');
         }
       }
-    }
+      
+    } // email flag
     
   } // For each row in Promotion Stalls GSheet
 
-  sendMailToStaff(events, emailFlag, smsFlag);
+  sendNotificationsToStaff(events, emailFlag, smsFlag);
 
   return 
   
@@ -196,7 +197,7 @@ function sendReminder_(emailFlag, smsFlag) {
    * @param {boolean} smsFlag
    */
   
-  function sendMailToStaff(events, emailFlag, smsFlag) {
+  function sendNotificationsToStaff(events, emailFlag, smsFlag) {
     
     var uniqueEmail = [];
     var staff = [];
@@ -355,6 +356,8 @@ function sendReminder_(emailFlag, smsFlag) {
 
     function getField(oldValue, newValue, addSameValues) {
 
+      Log_.fine('oldValue: %s, newValue: %s, addSameValues: %s', oldValue, newValue, addSameValues)
+
       newValue = newValue.trim();
       var returnValue = '';
 
@@ -392,6 +395,7 @@ function sendReminder_(emailFlag, smsFlag) {
         }
       }
     
+      Log_.fine('returnValue: %s', returnValue)
       return returnValue;
       
     } // sendReminder_.getField()
@@ -427,12 +431,15 @@ function sendReminder_(emailFlag, smsFlag) {
         '<tr>' + headerHTML + '</tr>' + 
         '<tr>' + rowHTML + '</tr>' + 
         '</table>';    
-    
+
+      Log_.fine('tableHTML: %s', tableHTML)
       return tableHTML;
     
     } // sendReminder_.getEventTableHtml()
 
     function sendSms(to, body) {
+    
+      Log_.fine('Sending SMS to %s (%s)', to, body)
     
       if (!TEST_SEND_SMS_) {
         Log_.warning('SMS Send disabled. not sent to: ' + to + ', body: ' + body);
@@ -461,11 +468,11 @@ function sendReminder_(emailFlag, smsFlag) {
       UrlFetchApp.fetch(messagesUrl, options);
       Log_.info('SMS sent to: ' + to + ', body: ' + body);
         
-    } // sendReminder_.sendMailToStaff.sendSms()
+    } // sendReminder_.sendNotificationsToStaff.sendSms()
     
-  } // sendReminder_.sendMailToStaff()
+  } // sendReminder_.sendNotificationsToStaff()
   
-  function getStaffFromMainSpreadsheet() {
+  function getStaff() {
   
     var staffFromSheet = [];
     
@@ -482,7 +489,7 @@ function sendReminder_(emailFlag, smsFlag) {
         if (phoneNumm.length < 6) {
           phoneNumm = "";
         } else {
-          var phoneNumm = '+1' + phoneNumm.replace(/-/g, '');
+          var phoneNumm = INTERNATIONAL_DIAL_CODE_ + phoneNumm.replace(/-/g, '');
         }
         
         var isTeamLeader = data[i][12];
@@ -501,15 +508,16 @@ function sendReminder_(emailFlag, smsFlag) {
             }
           }
         }
-        
-        staffFromSheet.push([data[i][0] + ' ' + data[i][1], data[i][8], data[i][12], data[i][11], phoneNumm, tLEmail, tlName]);
+
         // Name , email, isTL, team, phone, TL email, TL Name
+        staffFromSheet.push([data[i][0] + ' ' + data[i][1], data[i][8], data[i][12], data[i][11], phoneNumm, tLEmail, tlName]);
       }
     }
     
+    Log_.fine('staffFromSheet: %s', staffFromSheet)
     return staffFromSheet;
       
-  } // sendReminder_.getStaffFromMainSpreadsheet()
+  } // sendReminder_.getStaff()
 
   function getNextSunday(day, resetTime) {
     
@@ -554,6 +562,12 @@ function sendReminder_(emailFlag, smsFlag) {
       }
     }
   
+    if (staffMember.length === 0) {
+      Log_.warning('Could not find "%s"', role)
+    } else {
+      Log_.fine('Found "%s" for "%s"', staffMember, role);
+    }
+    
     return staffMember;
       
   } // sendReminder_.getStaffMemberFromRole()
@@ -582,7 +596,13 @@ function sendReminder_(emailFlag, smsFlag) {
         break;
       }
     }
-  
+ 
+    if (teamLeader.length === 0) {
+      Log_.warning('Could not find the team leader for "%s"', team);
+    } else {
+      Log_.fine('Found "%s" for "%s"', staffMember, role);
+    }
+
     return teamLeader;
 
   } // sendReminder_.getTeamLeader()
@@ -621,7 +641,7 @@ function startNotificationTriggers_() {
 //      .atHour(8)
 //      .create();
 //    
-//    ScriptApp.newTrigger('deleteExpiredRows') // Every Monday at 1am
+//    ScriptApp.newTrigger('hideExpiredRows') // Every Monday at 1am
 //      .timeBased()
 //      .onWeekDay(ScriptApp.WeekDay.MONDAY)
 //      .atHour(1)

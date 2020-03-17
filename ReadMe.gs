@@ -1,4 +1,9 @@
 
+// v1.8
+// ----
+//
+// - Changed delete rows to hide
+
 // v1.7.1
 // ------
 //

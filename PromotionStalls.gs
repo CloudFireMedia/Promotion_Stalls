@@ -44,7 +44,7 @@ var EVENT_HANDLERS_ = {
   stopNotificationTriggers:  ['stopNotificationTriggers()',  'Failed to stop notifications triggers',  stopNotificationTriggers_],
   hideEmptyColumns:          ['hideEmptyColumns()',          'Failed to hide empty columns',           hideEmptyColumns_],
   unHideAllColumns:          ['unHideAllColumns()',          'Failed to unHide all columns',           unHideAllColumns_],
-  deleteExpiredRows:         ['deleteExpiredRows()',         'Failed to delete expired rows',          deleteExpiredRows_],
+  hideExpiredRows:           ['hideExpiredRows()',           'Failed to hide expired rows',            hideExpiredRows_],
   addNewRow:                 ['addNewRow()',                 'Failed to add new row',                  addNewRow_],
 }
 
@@ -57,7 +57,7 @@ function stopNotificationTriggers()   {return eventHandler_(EVENT_HANDLERS_.stop
 function hideEmptyColumns()           {return eventHandler_(EVENT_HANDLERS_.hideEmptyColumns)}
 function unHideAllColumns()           {return eventHandler_(EVENT_HANDLERS_.unHideAllColumns)}
 
-function deleteExpiredRows()          {return eventHandler_(EVENT_HANDLERS_.deleteExpiredRows)}
+function hideExpiredRows()            {return eventHandler_(EVENT_HANDLERS_.hideExpiredRows)}
 function addNewRow()                  {return eventHandler_(EVENT_HANDLERS_.addNewRow)}
 
 // Private Functions

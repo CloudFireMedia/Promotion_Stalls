@@ -20,9 +20,9 @@
 // =============
 
 var SCRIPT_NAME = "PromotionStalls";
-var SCRIPT_VERSION = "v1.7.1";
+var SCRIPT_VERSION = "v1.7.1.dev_ajr";
 
-var PRODUCTION_VERSION_ = true;
+var PRODUCTION_VERSION_ = false;
 
 // Log Library
 // -----------
@@ -56,6 +56,8 @@ if (PRODUCTION_VERSION_ &&
 
 // Constants/Enums
 // ===============
+
+var INTERNATIONAL_DIAL_CODE_ = PRODUCTION_VERSION_ ? '+1' : '+44'
 
 var STALLS_SHEET_NAME_ = "Foyer + Atrium Promo Stalls";
 var STAFF_SHEET_NAME_ = 'Staff Directory';
